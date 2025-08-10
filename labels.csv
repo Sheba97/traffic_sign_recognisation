@@ -6,3 +6,5 @@ ClassId,Name
 4,Traffic signals
 5,Turn right ahead
 6,Turn left ahead
+7,Intersection
+8,Tunnel
