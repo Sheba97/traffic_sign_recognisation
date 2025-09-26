@@ -35,8 +35,8 @@ class DataVisualizer:
 
 
     def plot_distribution(self):
-        #samples_per_class = [np.sum(self.y_train == i) for i in range(self.num_classes)]
-        #plt.bar(range(self.num_classes), samples_per_class)
+        samples_per_class = [np.sum(self.y_train == i) for i in range(self.num_classes)]
+        plt.bar(range(self.num_classes), samples_per_class)
         plt.figure(figsize=(12, 4))
         plt.bar(range(0, self.num_classes), self.num_samples)
         plt.title("Distribution of the training dataset")

@@ -1,5 +1,5 @@
 from keras.models import Sequential
-from keras.layers import Dense, Flatten, Dropout, Conv2D, MaxPooling2D
+from keras.layers import Dense, Flatten, Dropout, Conv2D, MaxPooling2D, GlobalAveragePooling2D
 from keras.optimizers import Adam
 import matplotlib.pyplot as plt
 
@@ -13,7 +13,7 @@ class TSRModel:
         self.pool_size = (2, 2)
         self.num_nodes = 500  # Example number of nodes in the dense layer
         self.model = self._build_model() 
-
+        #self.model = self._build_model_64()
     def _build_model(self):
         model = Sequential()
         model.add(Conv2D(self.num_filters, self.kernel_size_1, activation='relu', input_shape=(self.input_shape[0], self.input_shape[1], 1)))
@@ -33,6 +33,27 @@ class TSRModel:
         model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=0.001), metrics=['accuracy'])
         return model
     
+    def _build_model_64(self):
+        model = Sequential()
+        model.add(Conv2D(60, (5,5), activation='relu', padding='same', input_shape=(self.input_shape[0], self.input_shape[1], 1)))
+        model.add(Conv2D(60, (5,5), activation='relu', padding='same'))
+        model.add(MaxPooling2D((2,2)))   # 32x32
+
+        model.add(Conv2D(30, (3,3), activation='relu', padding='same'))
+        model.add(Conv2D(30, (3,3), activation='relu', padding='same'))
+        model.add(MaxPooling2D((2,2)))   # 16x16
+
+        model.add(Conv2D(64, (3,3), activation='relu', padding='same'))
+        model.add(MaxPooling2D((2,2)))   # 8x8
+
+        model.add(GlobalAveragePooling2D())   # output dim = number of channels (e.g., 64)
+        model.add(Dropout(0.5))
+        model.add(Dense(256, activation='relu'))
+        model.add(Dropout(0.5))
+        model.add(Dense(self.num_classes, activation='softmax'))
+
+        model.compile(optimizer=Adam(1e-3), loss='categorical_crossentropy', metrics=['accuracy'])
+        return model
 
 class Trainer:
     def __init__(self, model, X_train, y_train, X_val, y_val, generator, steps_per_epoch_val, batch_size=32, epochs=10):
@@ -47,7 +68,7 @@ class Trainer:
         self.epochs = epochs
 
     def train(self):
-        history=self.model.fit_generator(self.generator.flow(self.X_train,self.y_train,batch_size=self.batch_size),steps_per_epoch=self.steps_per_epoch_val,
+        history=self.model.fit(self.generator.flow(self.X_train,self.y_train,batch_size=self.batch_size),steps_per_epoch=self.steps_per_epoch_val,
                                          epochs=self.epochs,validation_data=(self.X_val,self.y_val),shuffle=1)
         return history
     
