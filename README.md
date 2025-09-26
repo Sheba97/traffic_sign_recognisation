@@ -51,6 +51,17 @@ pip install -r requirements.txt
 # Run the main program
 python main.py
 ```
+## Results Graphs
+
+Accuracy for 32 x 32 size images wit 20 epochs
+<img width="640" height="480" alt="Accuracy_20_epoch_32" src="https://github.com/user-attachments/assets/6d64b3c1-2915-4d0a-82bf-4cba769e16b0" />
+
+Accuracy for 64 x 64 size images wit 20 epochs
+<img width="640" height="480" alt="Accuracy_20_epoch_64" src="https://github.com/user-attachments/assets/5ad38811-0701-43a1-86a6-90fb4da303ba" />
+
+Model Summary
+
+<img width="677" height="439" alt="model_32" src="https://github.com/user-attachments/assets/dc815ddf-3335-40ea-81f6-561de119edbc" />
 
 ## 🧠 Future Improvements
 
